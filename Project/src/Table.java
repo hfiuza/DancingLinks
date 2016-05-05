@@ -180,7 +180,7 @@ public class Table {
 	static boolean [][] readExactCoverProblem (){
         Scanner in;
 		try {
-			in = new Scanner(new File("inExactCover.txt"));
+			in = new Scanner(new File("input/inExactCover.txt"));
 	        int m = in.nextInt();
 	        int n= in.nextInt();
 	        boolean[][] M = new boolean [m][n];
