@@ -8,11 +8,12 @@ public class Table {
 	private int dMin=Integer.MAX_VALUE;
 	private int curDist = -1;
 	private ArrayList<Cell> solutions = new ArrayList<Cell>();
+	Cell [][] CellsOfM;
 	
  	public Table(boolean M[][]){
 		int m = M.length;
 		int n = M[0].length;
-		Cell [][] CellsOfM = new Cell[m][n];
+		CellsOfM = new Cell[m][n];
 		header = new Column(null, 0);
 		header.C = null;
 		Column p = header;
