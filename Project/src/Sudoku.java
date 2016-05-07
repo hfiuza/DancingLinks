@@ -3,9 +3,18 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Sudoku {
-	int n, N, N2; //typically, n=3, N=9,N2=81
-	Table dancingTable;
-	public Sudoku(int n){
+	static int n; //typically, n=3, N=9,N2=81
+	static int N;
+	static int N2;
+	static int [][] originalTable;
+	SudokuTable dancingTable;
+	
+	public Sudoku(){
+		readSudokuTable();
+		initializeEmptySudoku();
+		fillStartingCells();
+	}
+	public void initializeEmptySudoku(){
 		// we initialize the dancing links structure
 		/* we have N^3 lines and 3 N*N columns
 		 * the first N lines correspond to the top left cell
@@ -16,74 +25,69 @@ public class Sudoku {
 		 * the following N*N lines correspond to the Sudoku columns and the last
 		 * N*N lines to the Sudoku small squares
 		 */
-		this.n = n;
-		this.N = n*n;
-		this.N2 = N*N;
 		int N3 = N*N2;
-		boolean [][] table = new boolean[N3][3*N2];
+		boolean [][] table = new boolean[N3][4*N2];
 		
 		int i, j, k;
 		for(k=0; k<N; k++){
 			// we fill the table's lines with true
 			for(i=0; i<N; i++){
 				for(j=0; j<N; j++){
-					table[k*N2+N*i+j][N*k+i] = true; // (i, j) is in the lines i
-					table[k*N2+N*i+j][N2+N*k+j] = true; //(i, j) is in the column j
-					table[k*N2+N*i+j][2*N2+N*k + n*i+j] = true; // (i, j) is in the subsquare n*i+j
+					//System.out.println("i = "+i+" j= "+j);
+					//System.out.println("i = "+i+" j= "+j);
+					//System.out.println("k*N2+N*i+j = "+	(k*N2+N*i+j)+" 2*N2+N*k + n*(i/n)+(j/n) = "+(2*N2+N*k + n*(i/n)+(j/n)));
+					
+					table[k*N2+N*i+j][N*k+i] = true; // for (i, j) is in the lines i
+					table[k*N2+N*i+j][N2+N*k+j] = true; //for (i, j) is in the column j
+					table[k*N2+N*i+j][2*N2+N*k + n*(i/n)+(j/n)] = true; // for (i, j) is in the subsquare n*i+j
+					table[k*N2+N*i+j][3*N2+N*i+j]=true; //means that the position (i, j) is filled				
 				}				
 			}			
 		}
-		dancingTable = new Table(table);
+		dancingTable = new SudokuTable(table);
 	}
 		
-	static int [][] readSudokuTable(){
+	static void readSudokuTable(){
         Scanner in;
 		try {
 			in = new Scanner(new File("input/inSudoku.txt"));
-			int n = in.nextInt();
-			int N = n*n;
-	      	int [][] table = new int[N][N];
+			n = in.nextInt();
+			N = n*n;
+			N2 = N*N;
+	      	originalTable= new int[N][N];
 	      	int i, j;
 	      	for (i=0; i<N; i++)
 	      		for(j=0; j<N; j++)
-	      			table[i][j] = in.nextInt();	      		
+	      			originalTable[i][j] = in.nextInt();	      		
 	        in.close();
-	        return table;
-	    } catch (FileNotFoundException e) {
+	     } catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		return null;
 	}	
 	
-	public void fillStartingCells(int [][] table){
-		int N0 = table.length;
-		assert (N ==N0);
+	public void fillStartingCells(){
 		int i, j, k;
 		for(i=0; i<N; i++){
 			for(j=0; j<N; j++){
-				k = table[i][j];
+				k = originalTable[i][j];
 				if (k>0){
 					// in our exact cover solution, there need to be the row k*N2+N*i+j
 					// we assume that the input <table> has no collisions
-					// otherwise this code would produce meaningless and very unexpected results
-					Cell p = dancingTable.CellsOfM[k*N2+N*i+j][N*k+i];
+					// otherwise this code could produce meaningless and very unexpected results
+					Cell p = dancingTable.CellsOfM[(k-1)*N2+N*i+j][N*(k-1)+i];
 					// we consider any of the cells in the row k*N2+N*i+j that contains true
-					/*dancingTable.solutions.add(p);
-					Cell q = p.R;
-					while(q!=p){
-						dancingTable.Cover(q.C);				
-						q = q.R;
-					}		*/			
-					
+					dancingTable.addRowToSolutions(p);	
 				}				
 			}			
 		}
-		
 	}
 	
+	public void Solve(){
+		dancingTable.Solve();
+	}
 	public static void main(String args[]){
-		
-		
+		Sudoku mySudoku = new Sudoku();
+		mySudoku.Solve();	
 		
 	}
 	

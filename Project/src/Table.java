@@ -5,9 +5,7 @@ import java.util.Scanner;
 
 public class Table {
 	Column header;
-	private int dMin=Integer.MAX_VALUE;
-	private int curDist = -1;
-	private ArrayList<Cell> solutions = new ArrayList<Cell>();
+	protected ArrayList<Cell> solutions = new ArrayList<Cell>();
 	Cell [][] CellsOfM;
 	
  	public Table(boolean M[][]){
@@ -77,18 +75,50 @@ public class Table {
 		}
 		System.out.println("");
 	}
-	public void print_solution(){
+	private void auxAddRowToSolutions(Cell p){
+		// adds the row that contains the cell p and covers its intersecting columns, 
+		// except the one that contains p
+		solutions.add(p);
+		Cell q = p.R;
+		while(q!=p){
+			Cover(q.C);				
+			q = q.R;
+		}		
+	}
+	public void addRowToSolutions(Cell p){
+		Cover(p.C);
+		auxAddRowToSolutions(p);
+	}
+	private void auxRemoveRowFromSolutions(Cell p){
+		// does the reverse operation
+		p = solutions.get(solutions.size()-1);
+		solutions.remove(solutions.size()-1);
+		Cell q = p.L;
+		while(q!=p){
+			Uncover(q.C);
+			q = q.L;
+		}			
+	}
+	public void removeRowFromSolutions(Cell p){
+		auxRemoveRowFromSolutions(p);
+		Uncover(p.C);
+	}
+	public void printSolutions(){
 		System.out.println("We're now going to print the solutions");
-		int k = solutions.size();
-		for(int i=0; i<k; i++){
-			try {
-				System.out.print((solutions.get(i)).i);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			System.out.print(" ");
+		int[] labels = getSolutionsRowLabels();
+		for(int row : labels){
+			System.out.print(row+" ");
 		}
+		System.out.println("");
 		System.out.println("We finished printing the solutions");
+	}
+	int [] getSolutionsRowLabels (){
+		int[] labels = new int[solutions.size()];
+		int i=0;
+		for(Cell elem : solutions){
+			labels[i++] = elem.i;
+		}
+		return labels;
 	}
 	public void Cover(Column c){
 		c.R.L = c.L;
@@ -124,12 +154,12 @@ public class Table {
 	}
 	
 	public void Solve(){
-		solutions = new ArrayList<Cell>();
+		//solutions = new ArrayList<Cell>();
 		RecSolve();
 	}
 	public void RecSolve(){
 		if (header.R == header){
-			print_solution();	
+			printSolutions();	
 			return;
 		}
 		//We look for the column that contains the least number of 1s
@@ -147,25 +177,14 @@ public class Table {
 		Cover(cmin);
 		Cell p = cmin.D;
 		while(p!=cmin){
-			solutions.add(p);
-			Cell q = p.R;
-			while(q!=p){
-				Cover(q.C);				
-				q = q.R;
-			}
+			auxAddRowToSolutions(p);
 			RecSolve();
-			p = solutions.get(solutions.size()-1);
-			solutions.remove(solutions.size()-1);
-			q = p.L;
-			while(q!=p){
-				Uncover(q.C);
-				q = q.L;
-			}			
-			p = p.D; 
+			auxRemoveRowFromSolutions(p);
+			p = p.D;	
 		}
 		Uncover(cmin);		
 	}
-	static void print_matrix(boolean M[][]){
+	static void printMatrix(boolean M[][]){
 		int m = M.length;
 		int n = M[0].length;
 		for(int i=0; i<m; i++){
@@ -205,7 +224,7 @@ public class Table {
 	public static void main(String args[]){
 		boolean [][]M = null;
 		M = Table.readExactCoverProblem();
-		print_matrix(M);
+		printMatrix(M);
 		Table mytable = new Table(M);
 		mytable.Solve();
 	}
