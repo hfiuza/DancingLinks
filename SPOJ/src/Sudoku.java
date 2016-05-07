@@ -3,6 +3,34 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+public class Sudoku {
+	
+
+public class Cell {
+	Cell R, L, U, D; //U and D might be instances of column
+	Column C; //instance of class column
+	int i, j;
+	public Cell(Column C, int i, int j){
+		R = L = U = D = null;
+		this.C = C;
+		this.i = i;
+		this.j = j;
+	}
+}
+
+public class Column extends Cell{
+	//R and L are instances of Column
+	String name;
+	int size;
+	public Column(String n, int j){
+		super(null, 0, j);
+		this.C = this;
+		name = n;
+	}
+	
+}
+
+
 public class Table {
 	Column header;
 	protected ArrayList<Cell> solutions = new ArrayList<Cell>();
@@ -155,15 +183,12 @@ public class Table {
 	}
 	
 	public void Solve(){
-		// finds and prints all solutions
-		foundSolution =false;
+		foundSolution = false;
 		RecSolve();
-		if(!foundSolution){
-			System.out.println("There is no solution");
-			System.out.println("");
-		}
 	}
 	public void RecSolve(){
+		if (foundSolution)
+			return;
 		if (header.R == header){
 			printSolutions();	
 			foundSolution = true;
@@ -191,7 +216,7 @@ public class Table {
 		}
 		Uncover(cmin);		
 	}
-	static void printMatrix(boolean M[][]){
+	void printMatrix(boolean M[][]){
 		int m = M.length;
 		int n = M[0].length;
 		for(int i=0; i<m; i++){
@@ -204,7 +229,7 @@ public class Table {
 		}
 	}
 	
-	static boolean [][] readExactCoverProblem (){
+	boolean [][] readExactCoverProblem (){
         Scanner in;
 		try {
 			in = new Scanner(new File("input/inExactCover.txt"));
@@ -228,12 +253,138 @@ public class Table {
 	}
 	
 	
+	
+}
+
+public class SudokuTable extends Table{
+
+	public SudokuTable(boolean[][] M) {
+		super(M);
+	}
+
+	public void printSolutions(){
+		int [] labels = getSolutionsRowLabels();
+		int N2 = labels.length;
+		int N = (int) Math.sqrt((double)N2);
+		int n = (int) Math.sqrt((double)N);
+		int [][]M = new int [N][N];
+		int code, val, row, column;
+		
+		for (int i=0; i<N2; i++){
+			int x = code = labels[i]-1;
+			val = code/N2+1;
+			int k = val-1;
+			row = (code%N2)/N;
+			column = code%N;
+			//System.out.println("i = "+i+", x = "+x+", val = "+val+", row = "+row+", column = "+column+". For exact cover's sake: columns are "+(N*k+row)+", "+(N2+N*k+column)+", "+2*N2+N*k + n*(row/n)+(column/n));
+			M[row][column] = val;
+		}
+		
+		for(int i=0; i<N; i++){
+			for(int j=0; j<N; j++){
+				System.out.print( ((char) ('A' + M[i][j]-1))+" ");
+			}
+			System.out.println("");
+		}
+		System.out.println("");
+	}	
+}
+
+
+
+	
+	
+	
+	
+	static int n; //typically, n=3, N=9,N2=81
+	static int N;
+	static int N2;
+	static int [][] originalTable;
+	SudokuTable dancingTable;
+	
+	public Sudoku(Scanner in){
+		readSudokuTable(in);
+		initializeEmptySudoku();
+		fillStartingCells();
+	}
+	public void initializeEmptySudoku(){
+		// we initialize the dancing links structure
+		/* we have N^3 lines and 3 N*N columns
+		 * the first N lines correspond to the top left cell
+		 * the following N lines correspond to cell (0, 1)
+		 * 
+		 * Concerning the columns, the first N*N columns correspond to elements
+		 * appearances in each line of the Sudoku table (N elements x N lines)
+		 * the following N*N lines correspond to the Sudoku columns and the last
+		 * N*N lines to the Sudoku small squares
+		 */
+		int N3 = N*N2;
+		boolean [][] table = new boolean[N3][4*N2];
+		
+		int i, j, k;
+		for(k=0; k<N; k++){
+			// we fill the table's lines with true
+			for(i=0; i<N; i++){
+				for(j=0; j<N; j++){
+					table[k*N2+N*i+j][N*k+i] = true; // for (i, j) is in the lines i
+					table[k*N2+N*i+j][N2+N*k+j] = true; //for (i, j) is in the column j
+					table[k*N2+N*i+j][2*N2+N*k + n*(i/n)+(j/n)] = true; // for (i, j) is in the subsquare n*i+j
+					table[k*N2+N*i+j][3*N2+N*i+j]=true; //means that the position (i, j) is filled				
+				}				
+			}			
+		}
+		dancingTable = new SudokuTable(table);
+	}
+		
+	static void readSudokuTable(Scanner in){
+		n = 4;
+		N = n*n;
+		N2 = N*N;
+      	originalTable= new int[N][N];
+      	int i, j;
+      	String s;
+      	for (i=0; i<N; i++){
+      		s = in.next();
+      		//System.out.println("i = "+i+" s = "+s+" size of s = "+s.length());
+      		for(j=0; j<N; j++)
+      			originalTable[i][j] = (int) (1+s.charAt(j)-'A');      		
+      	}		
+	}	
+	
+	public void fillStartingCells(){
+		int i, j, k;
+		for(i=0; i<N; i++){
+			for(j=0; j<N; j++){
+				k = originalTable[i][j];
+				if (k>0){
+					// in our exact cover solution, there need to be the row k*N2+N*i+j
+					// we assume that the input <table> has no collisions
+					// otherwise this code could produce meaningless and very unexpected results
+					Cell p = dancingTable.CellsOfM[(k-1)*N2+N*i+j][N*(k-1)+i];
+					// we consider any of the cells in the row k*N2+N*i+j that contains true
+					dancingTable.addRowToSolutions(p);	
+				}				
+			}			
+		}
+	}
+	
+	public void Solve(){
+		dancingTable.Solve();
+	}
 	public static void main(String args[]){
-		boolean [][]M = null;
-		M = Table.readExactCoverProblem();
-		printMatrix(M);
-		Table mytable = new Table(M);
-		mytable.Solve();
+		try{
+			Scanner in = new Scanner(System.in);
+			int t = in.nextInt();
+			while(t>0){
+				Sudoku mySudoku = new Sudoku(in);
+				mySudoku.Solve();	
+				t--;
+			}
+			in.close();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 }
