@@ -8,6 +8,7 @@ public class Table {
 	protected ArrayList<Cell> solutions = new ArrayList<Cell>();
 	Cell [][] CellsOfM;
 	boolean foundSolution;
+    public ArrayList<Cell> solution2 = new ArrayList<>();
 	
  	public Table(boolean M[][]){
 		int m = M.length;
@@ -114,9 +115,9 @@ public class Table {
 		System.out.println("We finished printing the solutions");
 	}
 	int [] getSolutionsRowLabels (){
-		int[] labels = new int[solutions.size()];
+		int[] labels = new int[solution2.size()];
 		int i=0;
-		for(Cell elem : solutions){
+		for(Cell elem : solution2){
 			labels[i++] = elem.i;
 		}
 		return labels;
@@ -164,8 +165,10 @@ public class Table {
 		}
 	}
 	public void RecSolve(){
+		if (foundSolution) return;
 		if (header.R == header){
-			printSolutions();	
+            solution2.addAll(solutions);
+			printSolutions();
 			foundSolution = true;
 			return;
 		}
