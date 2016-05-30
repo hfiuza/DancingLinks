@@ -35,5 +35,7 @@ public class Main {
                 System.out.print(reducedMatrix[solutionRows[i]-1][j] ? "1" : "0");
             System.out.println();
         }
+
+        pavage.showSolution(reducedMatrix, solutionRows);
     }
 }

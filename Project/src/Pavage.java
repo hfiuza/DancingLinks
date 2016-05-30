@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -102,5 +103,15 @@ public class Pavage {
             for (int j = 0; j < ncolumns + pieces.size(); j++)
                 ans[i][j] = matrix.get(i)[j];
         return ans;
+    }
+
+    public void showSolution (boolean[][] matrix, int[] solutionRows) {
+
+        int ncolumns = board.getNrows() * board.getNcolumns() - getNumberOfHoles();
+        int[][] colToIndex = getColtoIndex(ncolumns);
+
+        Frame frame = new Frame(matrix, solutionRows, colToIndex, board.getNrows(), board.getNcolumns());
+        new Thread(frame).start();
+
     }
 }
