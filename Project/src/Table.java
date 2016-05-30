@@ -12,7 +12,7 @@ public class Table {
     int solutionsCounter=0;
 	final int secondaryColumns;
 	int remainingColumns;
- 	public Table(boolean M[][], Integer secondaryColumns){
+ 	public Table(boolean M[][], int secondaryColumns){
 		int m = M.length;
 		int n = M[0].length;
 		this.secondaryColumns = secondaryColumns;
@@ -139,6 +139,7 @@ public class Table {
 		return labels;
 	}
 	public void Cover(Column c){
+		remainingColumns--;
 		c.R.L = c.L;
 		c.L.R = c.R;
 		Cell p = c.D;
@@ -155,6 +156,7 @@ public class Table {
 		}	
 	}
 	public void Uncover(Column c){
+		remainingColumns++;
 		Cell p = c.U;
 		Cell q;
 		while(p!=c){
@@ -183,13 +185,17 @@ public class Table {
 		}
 	}
 	public void RecSolve(){
-		if (header.R == header || remainingColumns <= secondaryColumns){
+		if ((remainingColumns <= secondaryColumns) ){
 			if(!foundSolution){
 				// we save the first solution we find at "solution2"
 	            solution2.addAll(solutions);
 				foundSolution = true;
 			}
 			solutionsCounter++;
+			return;
+		}
+		else if(header.R == header){
+			System.out.print("Error: the DLX Matrix is empty but the algorithm couldn't detect it");
 			return;
 		}
 		//We look for the column that contains the least number of 1s

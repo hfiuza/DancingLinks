@@ -17,7 +17,7 @@ public class Main {
         if (args[0].equals("emc")) {
         	//emc problem
     		boolean [][]M = null;
-    		int[] secondaryColumns=new int[1];
+    		int[] secondaryColumns=new int[1]; // we use an array to implement passage by reference
     		M = Table.readExactCoverProblem(secondaryColumns);
     		printMatrix(M);
     		Table mytable = new Table(M, secondaryColumns[0]);
@@ -25,7 +25,6 @@ public class Main {
     		mytable.printSolutions();
         	
         } else if (args[0].equals("pavage")) {
-            //pavage problem - mudar entrada
             Pavage pavage = new Pavage();
             pavage.readInput();
             boolean[][] reducedMatrix = pavage.getReducedMatrix();
