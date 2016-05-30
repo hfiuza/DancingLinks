@@ -1,3 +1,4 @@
+import java.util.Scanner;
 
 public class Main {
 
@@ -10,32 +11,48 @@ public class Main {
     }
 
     public static void main (String args[]) {
-//        if (args[0].equals("emc")) {
-//            //emc problem
-//        } else if (args[0].equals("pavage")) {
-//
-//        } else {
-//
-//        }
+    	// at first, we print the original table we read in the entries
+    	// then we print one solution as well as the total number of solutions
+    	
+        if (args[0].equals("emc")) {
+        	//emc problem
+    		boolean [][]M = null;
+    		int[] secondaryColumns=new int[1];
+    		M = Table.readExactCoverProblem(secondaryColumns);
+    		printMatrix(M);
+    		Table mytable = new Table(M, secondaryColumns[0]);
+    		mytable.Solve();
+    		mytable.printSolutions();
+        	
+        } else if (args[0].equals("pavage")) {
+            //pavage problem - mudar entrada
+            Pavage pavage = new Pavage();
+            pavage.readInput();
+            boolean[][] reducedMatrix = pavage.getReducedMatrix();
+            //printMatrix(reducedMatrix);
 
-        //pavage problem - mudar entrada
-        Pavage pavage = new Pavage();
-        pavage.readInput(args[0]);
-        boolean[][] reducedMatrix = pavage.getReducedMatrix();
-        printMatrix(reducedMatrix);
+            Table instance = new Table(reducedMatrix, 0);
+            instance.Solve();
 
-        Table instance = new Table(reducedMatrix);
-        instance.Solve();
-
-        int[] solutionRows = instance.getSolutionsRowLabels();
-        System.out.println(solutionRows.length);
-
-        for (int i = 0; i < solutionRows.length; i++) {
-            for (int j = 0; j < reducedMatrix[solutionRows[i]-1].length; j++)
-                System.out.print(reducedMatrix[solutionRows[i]-1][j] ? "1" : "0");
-            System.out.println();
+            int[] solutionRows = instance.getSolutionsRowLabels();
+            instance.printSolutions();
+            System.out.println(solutionRows.length);
+            pavage.showSolution(reducedMatrix, solutionRows);
+        	
+        } else if(args[0].equals("sudoku")){
+        	// sudoku problem
+        	// input form : in the first line is the length of the Sudoku table
+        	// the following lines represent the lines of the Sudoku table
+        	// using DLX algorithm allows us to solve 16x16 Sudoku puzzles
+        	// while a simple backtracking can only solve 9x9 Sudoku puzzles
+        	System.out.println("Sudoku");
+    		Sudoku mySudoku = new Sudoku();
+    		mySudoku.Solve();  	
+    		mySudoku.printSudokuSolution();
+        }
+        else{
+        	System.out.println("Wrong argument");
         }
 
-        pavage.showSolution(reducedMatrix, solutionRows);
     }
 }

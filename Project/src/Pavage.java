@@ -2,6 +2,7 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,22 +28,29 @@ public class Pavage {
         return nholes;
     }
 
-    public void readInput(String filename) {
+    public void readInput() {
         BufferedReader br = null;
         try {
             //read board
-            br = new BufferedReader(new FileReader(filename));
+            br = new BufferedReader(new InputStreamReader(System.in));
             int C = Integer.parseInt(br.readLine()); //number of columns
+            //System.out.println("C = " + C);
             int L = Integer.parseInt(br.readLine()); //number of rows
+            //System.out.println("L = " + L);
             board = new Board(L, C, readMatrix(br, L));
 
             //read pieces
             int P = Integer.parseInt(br.readLine()); //number of pieces
+            //System.out.println("P = " + P);
             pieces = new ArrayList<>();
             for (int i = 0; i < P; i++) {
+                //System.out.println("i = " + i);
                 C = Integer.parseInt(br.readLine()); //number of columns
+                //System.out.println("i = " + i);
                 L = Integer.parseInt(br.readLine()); //number of rows
+                //System.out.println("i = " + i);
                 Piece piece = new Piece(i, L, C, readMatrix(br, L));
+                //System.out.println("i = " + i);
                 pieces.add(piece);
             }
         } catch (IOException e) {

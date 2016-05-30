@@ -9,10 +9,14 @@ public class Table {
 	Cell [][] CellsOfM;
 	boolean foundSolution;
     public ArrayList<Cell> solution2 = new ArrayList<>();
-	
- 	public Table(boolean M[][]){
+    int solutionsCounter=0;
+	final int secondaryColumns;
+	int remainingColumns;
+ 	public Table(boolean M[][], Integer secondaryColumns){
 		int m = M.length;
 		int n = M[0].length;
+		this.secondaryColumns = secondaryColumns;
+		this.remainingColumns = n;
 		CellsOfM = new Cell[m][n];
 		header = new Column(null, 0);
 		header.C = null;
@@ -69,7 +73,7 @@ public class Table {
 		}
 		
 	}
-	public void print_sizes(){
+	private void print_sizes(){
 		Column p = (Column) header.R;
 		while (p!=header){			
 			System.out.println(p.size);		
@@ -106,13 +110,25 @@ public class Table {
 		Uncover(p.C);
 	}
 	public void printSolutions(){
-		System.out.println("We're now going to print the solutions");
+		System.out.println("There are in total " + solutionsCounter + " solutions");
+		System.out.println("We're now going to print one of these solutions");
 		int[] labels = getSolutionsRowLabels();
+		System.out.print("in this solution, the row numbers are: ");
 		for(int row : labels){
 			System.out.print(row+" ");
 		}
 		System.out.println("");
-		System.out.println("We finished printing the solutions");
+		System.out.println("these rows are ");
+		for(int row : labels){
+			for(Cell x : CellsOfM[row-1]){
+				if(x==null)
+					System.out.print("0");
+				else
+					System.out.print("1");
+			}
+			System.out.println("");
+		}
+		
 	}
 	int [] getSolutionsRowLabels (){
 		int[] labels = new int[solution2.size()];
@@ -158,6 +174,8 @@ public class Table {
 	public void Solve(){
 		// finds and prints all solutions
 		foundSolution =false;
+		solutionsCounter = 0;
+		remainingColumns = CellsOfM[0].length; // to b updated in the algorithm
 		RecSolve();
 		if(!foundSolution){
 			System.out.println("There is no solution");
@@ -165,11 +183,13 @@ public class Table {
 		}
 	}
 	public void RecSolve(){
-		if (foundSolution) return;
-		if (header.R == header){
-            solution2.addAll(solutions);
-			printSolutions();
-			foundSolution = true;
+		if (header.R == header || remainingColumns <= secondaryColumns){
+			if(!foundSolution){
+				// we save the first solution we find at "solution2"
+	            solution2.addAll(solutions);
+				foundSolution = true;
+			}
+			solutionsCounter++;
 			return;
 		}
 		//We look for the column that contains the least number of 1s
@@ -207,35 +227,33 @@ public class Table {
 		}
 	}
 	
-	static boolean [][] readExactCoverProblem (){
-        Scanner in;
-		try {
-			in = new Scanner(new File("input/inExactCover.txt"));
-	        int m = in.nextInt();
-	        int n= in.nextInt();
-	        boolean[][] M = new boolean [m][n];
-	        for (int i=0; i<m; i++){
-	        	for(int j=0; j<n; j++){
-	        		int cur = in.nextInt();
-	        	   	if (cur==1) M[i][j] = true;
-	        	   	else M[i][j] = false;
-	        	}
-	        }
-	        in.close();
-	        return M;
-	    } catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-
+	static boolean[][] readExactCoverProblem (int[] SecondaryColumns){
+		Scanner in = new Scanner(System.in);
+	    int n = in.nextInt();
+	    int p = in.nextInt();
+	    int m= in.nextInt();
+	    boolean[][]M = new boolean [m][n];
+	    SecondaryColumns[0] = p;
+	    String line;
+	    for (int i=0; i<m; i++){
+	     	line = in.next();
+	       	for(int j=0; j<n; j++){
+	       	   	if (line.charAt(j)=='1') M[i][j] = true;
+	       	   	else M[i][j] = false;
+	       	}
+	    }
+	    in.close();
+	    return M;
 	}
 	
 	
 	public static void main(String args[]){
 		boolean [][]M = null;
-		M = Table.readExactCoverProblem();
+		int[] secondaryColumns=new int[1];
+		M = Table.readExactCoverProblem(secondaryColumns);
+		System.out.println("secondaryColumns = " + secondaryColumns[0]);
 		printMatrix(M);
-		Table mytable = new Table(M);
+		Table mytable = new Table(M, secondaryColumns[0]);
 		mytable.Solve();
 	}
 	

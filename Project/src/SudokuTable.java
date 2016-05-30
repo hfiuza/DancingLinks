@@ -2,11 +2,12 @@
 public class SudokuTable extends Table{
 
 	public SudokuTable(boolean[][] M) {
-		super(M);
+		super(M, 0);
 	}
 
 	public void printSolutions(){
-		System.out.println("We're now going to print the solutions");		
+		System.out.println("There are in total " + solutionsCounter + " solutions");
+		System.out.println("We're now going to print one of these solutions");		
 		int [] labels = getSolutionsRowLabels();
 		int N2 = labels.length;
 		int N = (int) Math.sqrt((double)N2);
@@ -30,16 +31,7 @@ public class SudokuTable extends Table{
 			}
 			System.out.println("");
 		}
-		System.out.println("We finished printing the solutions");
-		System.exit(0);
 	}
 
-	public static void main(String args[]){
-		boolean [][]M = null;
-		M = Table.readExactCoverProblem();
-		printMatrix(M);
-		SudokuTable mytable = new SudokuTable(M);
-		mytable.Solve();
-	}
 	
 }

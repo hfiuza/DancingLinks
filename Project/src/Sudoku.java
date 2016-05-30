@@ -48,21 +48,17 @@ public class Sudoku {
 	}
 		
 	static void readSudokuTable(){
-        Scanner in;
-		try {
-			in = new Scanner(new File("input/inSudoku.txt"));
-			n = in.nextInt();
-			N = n*n;
-			N2 = N*N;
-	      	originalTable= new int[N][N];
-	      	int i, j;
-	      	for (i=0; i<N; i++)
-	      		for(j=0; j<N; j++)
-	      			originalTable[i][j] = in.nextInt();	      		
-	        in.close();
-	     } catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		Scanner in = new Scanner(System.in);
+		n = in.nextInt();
+		N = n*n;
+		N2 = N*N;
+	    originalTable= new int[N][N];
+	    int i, j;
+	    for (i=0; i<N; i++){
+	    	for(j=0; j<N; j++)
+	    		originalTable[i][j] = in.nextInt();	    
+	    }
+	    in.close();
 	}	
 	
 	public void fillStartingCells(){
@@ -85,10 +81,13 @@ public class Sudoku {
 	public void Solve(){
 		dancingTable.Solve();
 	}
+	public void printSudokuSolution(){
+		dancingTable.printSolutions();
+	}
 	public static void main(String args[]){
 		Sudoku mySudoku = new Sudoku();
 		mySudoku.Solve();	
-		
+		mySudoku.printSudokuSolution();
 	}
 	
 }
