@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="864.0" y="253.0">com</node>
+    <node x="833.0" y="402.0">netscape</node>
+    <node x="45.0" y="461.0">Frame</node>
+    <node x="-17.25" y="-10.0">Element</node>
+    <node x="807.0" y="116.0">toolbarButtonGraphics</node>
+    <node x="-64.0" y="245.0">Pavage</node>
+    <node x="898.0" y="371.0">sun</node>
+    <node x="872.0" y="443.0">apple</node>
+    <node x="870.0" y="545.0">java</node>
+    <node x="33.0" y="71.0">Board</node>
+    <node x="270.0" y="206.0">SudokuTable</node>
+    <node x="802.0" y="28.0">javax</node>
+    <node x="388.0" y="148.0">Column</node>
+    <node x="-51.0" y="71.0">Piece</node>
+    <node x="853.0" y="293.0">javafx</node>
+    <node x="448.5" y="-9.0">Cell</node>
+    <node x="901.0" y="75.0">oracle</node>
+    <node x="190.5" y="-32.0">Table</node>
+    <node x="889.0" y="502.0">org</node>
+    <node x="822.0" y="228.0">resources</node>
+    <node x="264.0" y="459.0">CellPane</node>
+    <node x="161.0" y="575.0">Pane</node>
+    <node x="811.0" y="175.0">META-INF</node>
+    <node x="854.0" y="325.0">jdk</node>
+    <node x="301.0" y="307.0">Sudoku</node>
+    <node x="163.0" y="323.0">Main</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="Sudoku" target="SudokuTable">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Pavage" target="Frame">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Table" target="Cell">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Pavage" target="Piece">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Main" target="Table">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="SudokuTable" target="Table">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="Board" target="Element">
+      <point x="0.0" y="-14.5" />
+      <point x="66.5" y="46.0" />
+      <point x="44.25" y="46.0" />
+      <point x="20.5" y="14.5" />
+    </edge>
+    <edge source="Frame" target="Pane">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Table" target="Column">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Cell" target="Column">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Pavage" target="Board">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Column" target="Cell">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="Piece" target="Element">
+      <point x="0.0" y="-14.5" />
+      <point x="-19.0" y="46.0" />
+      <point x="3.25" y="46.0" />
+      <point x="-20.5" y="14.5" />
+    </edge>
+    <edge source="Main" target="Pavage">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Pane" target="CellPane">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="484.5" y="272.5" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

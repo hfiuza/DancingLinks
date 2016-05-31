@@ -2,8 +2,6 @@
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -53,7 +51,6 @@ public class Pane extends JPanel {
     }
 
     public void setCellColor (int x, int y, Color color) {
-        System.out.println(NUM_COLUMN);
         int linearIndex = x * NUM_COLUMN + y;
         CellPane cell = listCell.get(linearIndex);
         cell.setBackground(color);

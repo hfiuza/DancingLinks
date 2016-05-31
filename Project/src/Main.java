@@ -1,4 +1,3 @@
-import java.util.Scanner;
 
 public class Main {
 
@@ -35,7 +34,6 @@ public class Main {
 
             int[] solutionRows = instance.getSolutionsRowLabels();
             instance.printSolutions();
-            System.out.println(solutionRows.length);
             pavage.showSolution(reducedMatrix, solutionRows);
         	
         } else if(args[0].equals("sudoku")){

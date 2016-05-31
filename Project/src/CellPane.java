@@ -7,10 +7,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 public class CellPane extends JPanel {
-    private final int DIM_X = 25;
-    private final int DIM_Y = 25;
-
-    private Color defaultBackground;
+    private final int DIM_X = 50;
+    private final int DIM_Y = 50;
 
     @Override
     public Dimension getPreferredSize() {
